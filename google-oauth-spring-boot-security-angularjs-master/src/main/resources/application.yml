@@ -1,0 +1,31 @@
+security:
+  oauth2:
+    client:
+      clientId: 554872336846-detp3fltkupkclib741brlgh8mgp3oov.apps.googleusercontent.com
+      clientSecret: qq5IsJi4VBT2EojOT2JjThYG
+      accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+      clientAuthenticationScheme: form
+      scope:
+        - openid
+        - email
+        - profile
+    resource:
+      userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+      preferTokenInfo: true
+spring:
+    datasource:
+        url: jdbc:mysql://localhost:8889/pictureshare
+        username: root
+        password: root
+        tomcat.connection-properties: useUnicode=true;characterEncoding=utf-8;
+        datasource.sql-script-encoding: UTF-8
+
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+            naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL5InnoDBDialect
