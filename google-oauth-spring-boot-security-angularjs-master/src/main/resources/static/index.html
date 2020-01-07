@@ -54,8 +54,9 @@
 							ng-click="logout()"> Logout </a>
 					</div>
 				</div>
-                <div>
-                <h1 ng-repeat="x in albums" ng-click="test()">{{x.album.name}}</h1> <!-- exemple directive click pour avoir une fonciton a click ng-repeat pour boucler sur l'element x (nimporte quoi qui soit de dans) dans albums ( la variable du $scope)-->
+                <div ng-repeat="x in albums">
+                    <h1 ng-click="test()">{{x.album.name}}</h1> <!-- exemple directive click pour avoir une fonciton a click ng-repeat pour boucler sur l'element x (nimporte quoi qui soit de dans) dans albums ( la variable du $scope)-->
+                    <h1>{{p.url}}</h1>
                 </div>
 			</div>
 			<!-- End Home Panel -->

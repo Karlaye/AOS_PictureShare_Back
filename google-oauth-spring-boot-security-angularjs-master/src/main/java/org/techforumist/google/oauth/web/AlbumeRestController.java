@@ -57,7 +57,68 @@ public class AlbumeRestController {
     public void putPhotoById(Principal principal, @PathVariable Long id, @RequestBody Photo photo){
         Photo photo1 = new Photo();
         photo1 = photo;
+        photo1.setIdUser(userRepository.findByName(principal.getName()).getId());
+        photoRepository.save(photo1);
         System.out.println(photo1);
+    }
+    @DeleteMapping(value ="/album/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public String deleteAlbum(Principal principal, @PathVariable Long id){
+        if(principal.getName().equals(userRepository.findOne(albumRepository.findOne(id).getIdUser()).getName())){
+            albumRepository.delete(albumRepository.findOne(id));
+            for(Photo photo : photoRepository.findAllByIdAlbum(id)){
+                photoRepository.delete(photo);
+            }
+            return "done delete";
+        }else{
+            return "fail delete";
+        }
+    }
+    @PostMapping(value ="/album/new")
+    @PreAuthorize("hasRole('USER')")
+    public void createAlbum(Principal principal, @RequestBody Album album){
+        Album album1 = album;
+        album.setIdUser(userRepository.findByName(principal.getName()).getId());
+        albumRepository.save(album1);
+    }
+    @GetMapping(value="/album/all/me")
+    @PreAuthorize("hasRole('USER')")
+    public List<AlbumDTO> getAlbumMe(Principal principal){
+        AlbumDTO albumDTO = new AlbumDTO();
+        List<AlbumDTO> albumDTOList = new ArrayList<>();
+        List<Album> albums = albumRepository.findAllByIdUser(userRepository.findByName(principal.getName()).getId());
+        AlbumDTO a = new AlbumDTO();
+        for(Album album : albums){
+            a = new AlbumDTO();
+            a.setAlbum(album);
+            a.setPhotos(photoRepository.findAllByIdAlbum(album.getId()));
+            albumDTOList.add(a);
+        }
+        return albumDTOList;
+    }
+
+    @PostMapping(value="/album/all/user/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public List<AlbumDTO> getAlbumForUser(Principal principal,@PathVariable Long id){
+        AlbumDTO albumDTO = new AlbumDTO();
+        List<AlbumDTO> albumDTOList = new ArrayList<>();
+        List<Album> albums = albumRepository.findAllByIdUser(id);
+        AlbumDTO a = new AlbumDTO();
+        for(Album album : albums){
+            a = new AlbumDTO();
+            a.setAlbum(album);
+            a.setPhotos(photoRepository.findAllByIdAlbum(album.getId()));
+            albumDTOList.add(a);
+        }
+        return albumDTOList;
+    }
+
+    @DeleteMapping(value="/album/picture/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public void deletePhoto(Principal principal, @PathVariable Long id){
+        if(principal.getName().equals(userRepository.findOne(albumRepository.findOne(id).getIdUser()).getName())){
+            photoRepository.delete(id);
+        }
     }
 
     @GetMapping("/test/test")
@@ -215,6 +276,31 @@ public class AlbumeRestController {
         photoRepository.save(photo14);
         */
 
+        Album album20 = new Album();
+        Album album21 = new Album();
+        Album album22 = new Album();
+        Album album23 = new Album();
+
+        album20.setIdUser((long)1);
+        album20.setName("test10");
+        album20.setPublique(false);
+
+        album21.setIdUser((long)1);
+        album21.setName("test11");
+        album21.setPublique(false);
+
+        album22.setIdUser((long)1);
+        album22.setName("test12");
+        album22.setPublique(false);
+
+        album23.setIdUser((long)1);
+        album23.setName("test13");
+        album23.setPublique(false);
+
+        albumRepository.save(album20);
+        albumRepository.save(album21);
+        albumRepository.save(album22);
+        albumRepository.save(album23);
         return "done";
     }
 
