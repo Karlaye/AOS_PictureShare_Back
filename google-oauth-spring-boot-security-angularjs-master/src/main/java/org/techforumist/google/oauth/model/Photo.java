@@ -23,13 +23,17 @@ public class Photo {
     private Long idAlbum;
 
     @Column(nullable = true)
-    private String commentaire;
+    private int commentaire;
 
     @Column(nullable = true)
     private String legende;
 
     @Column(nullable = false)
     private String url;
+
+    public Photo() {
+        this.commentaire = 0;
+    }
 
     public String getUrl() {
         return url;
@@ -79,11 +83,11 @@ public class Photo {
         this.idAlbum = idAlbum;
     }
 
-    public String getCommentaire() {
+    public int getCommentaire() {
         return commentaire;
     }
 
-    public void setCommentaire(String commentaire) {
+    public void setCommentaire(int commentaire) {
         this.commentaire = commentaire;
     }
 

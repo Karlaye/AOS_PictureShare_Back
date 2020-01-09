@@ -9,7 +9,7 @@ app.config([ '$httpProvider', function($httpProvider) {
 app.controller('AppCtrl', function($http, $scope) {
 
     $scope.albums = {};
-    // method for getting user details
+    // method for getting user details FONCTIONNE
     var getUser = function() {
         $http.get('/user').success(function(user) {
             $scope.user = user;
@@ -20,7 +20,7 @@ app.controller('AppCtrl', function($http, $scope) {
     };
     getUser();
 
-    // method for logout
+    // method for logout FONCTIONNE
     $scope.logout = function() {
         $http.post('/logout').success(function(res) {
             $scope.user = null;
@@ -29,7 +29,7 @@ app.controller('AppCtrl', function($http, $scope) {
         });
     };
 
-    $scope.getAllAlbum = function() { // pour faire un appel simple sans arguement ni objet dans la requete
+    $scope.getAllAlbum = function() { // FONCTIONNE
         $http.get('/album/all').success(function(resultat) {
             $scope.albums = resultat;
             console.log('albums : ', resultat);
@@ -39,10 +39,7 @@ app.controller('AppCtrl', function($http, $scope) {
     };
     $scope.getAllAlbum();
 
-    $scope.test = function () {
-        alert("test reussi");
-
-    }
+    //FONCTIONNE
     $scope.getAlbumById = function(id) { // appel avec un parametre dans l'url (/album/+parametre) a utiliser quand on veut recup un truc qui a un id ou faire un put
         $http.post('/album/'+id).success(function(resultat){
             console.log(resultat)
@@ -50,8 +47,9 @@ app.controller('AppCtrl', function($http, $scope) {
             console.log("fail get by id");
         })
     }
-    $scope.getAlbumById(1);
+    //$scope.getAlbumById(1);
 
+    //FONCTIONNE
     $scope.putPhotoAlbum = function(id){
         var photo = {};
         photo.titre = "titre de test";
@@ -65,7 +63,8 @@ app.controller('AppCtrl', function($http, $scope) {
             console.log("fail put photo");
         })
     }
-    $scope.putPhotoAlbum(1);
+    //$scope.putPhotoAlbum(1);
+
 
     $scope.deleteAlbum = function(id){
         $http.delete('/album/'+id).success(function(){
@@ -74,6 +73,8 @@ app.controller('AppCtrl', function($http, $scope) {
             console.log("fail delete");
         })
     }
+
+    //FONCTIONNE
     $scope.deletePhoto = function(id){
         $http.delete('/album/picture/'+id).success(function(){
             console.log("deleteDone photo")
@@ -114,9 +115,9 @@ app.controller('AppCtrl', function($http, $scope) {
 
     //$scope.deleteAlbum(7);
     //$scope.deletePhoto(1);
-    $scope.createAlbum("test pierroledingo",true,"pas d'image");
-    $scope.getAllAlbumForMe();
-    $scope.getAllAlbumForUser(99998);
+    //$scope.createAlbum("test pierroledingo",true,"pas d'image");
+    //$scope.getAllAlbumForMe();
+    //$scope.getAllAlbumForUser(99998);
 
 
 

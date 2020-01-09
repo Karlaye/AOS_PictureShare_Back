@@ -3,16 +3,16 @@ package org.techforumist.google.oauth.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "DroitPhoto")
-public class DroitAlbum {
+@Table(name = "Follow")
+public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long idAlbum;
+    @Column(nullable = false) // celui qui follow
+    private Long idFollower;
 
-    @Column(nullable = false)
+    @Column(nullable = false) // celui qui est follow
     private Long idUser;
 
     public Long getId() {
@@ -23,12 +23,12 @@ public class DroitAlbum {
         this.id = id;
     }
 
-    public Long getIdAlbum() {
-        return idAlbum;
+    public Long getIdFollower() {
+        return idFollower;
     }
 
-    public void setIdAlbum(Long idAlbum) {
-        this.idAlbum = idAlbum;
+    public void setIdFollower(Long idFollower) {
+        this.idFollower = idFollower;
     }
 
     public Long getIdUser() {
@@ -38,5 +38,4 @@ public class DroitAlbum {
     public void setIdUser(Long idUser) {
         this.idUser = idUser;
     }
-
 }
