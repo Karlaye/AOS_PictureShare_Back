@@ -21,4 +21,4 @@ compte des gens qui me follow : GET  /follow/me/count
 compte des gens que je follow : GET /follow/me/count
 
 User :
-get userinfo : GET user/{id}
+get userinfo : GET /user/{id}
