@@ -18,7 +18,7 @@ get les user que je follow : GET /follow
 follow quelqu'un : POST /follow/{id}  (l'id de la photo visée )
 supprimer un follow : DELETE /follow/{id} 
 compte des gens qui me follow : GET  /follow/me/count
-compte des gens que je follow : GET /follow/me/count
+compte des gens que je follow : GET /follow/count
 
 User :
 get userinfo : GET /user/{id}
