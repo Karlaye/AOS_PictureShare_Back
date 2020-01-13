@@ -61,27 +61,29 @@
 
 		</div>
 		<!-- End Home Panel -->
-
-		<div ng-repeat="x in albums" ng-show="user">
-			<h1 ng-click="test()">{{x.album.name}}</h1> <!-- exemple directive click pour avoir une fonciton a click ng-repeat pour boucler sur l'element x (nimporte quoi qui soit de dans) dans albums ( la variable du $scope)-->
-			<div class = "photos" ng-repeat="p in x.photos" ng-show="user">
-				<img  src="{{p.url}}"/>
-				<div class="commentaires" ng-repeat="c in commentaire" ng-show="user">
-					<h1>{{c.commentaire}}</>
-					<input type="text" ng-model="com"/>
-					<button id="put_Commentaire" ng-click="postCommentaire(p.id,com)">Poster le commentaire</button>
-					<button id="delete_Commentaire" ng-click="deleteCommentaire(i.id)">Supprimer ce commentaire</button>
-					<input type="text" ng-model="newCom"/>
-					<button id="update_Commentaire" ng-click="updateCommentaire(i.id,newCom)">Poster le commentaire</button>
-				</div>
-
-				<button ng-click="deletePhoto(p.id)" id="suppression_photo">Suppression de la photo</button>
-
-			</div>
+		<button ng-click="changemode(null)" ng-show="user">Accueil</button>
+		<div ng-repeat="x in albums"  ng-show="modeAlbum" ng-click="changemode(x.photos)">
+			<img src="{{x.album.image}}"/>
+			<h1>{{x.album.name}}</h1>
 
 
 			<button id="ajout_photo" ng-click="putPhotoAlbum(x.album.id)">Ajout d'une photo en base</button>
 			<button id="delete_album" ng-click="deleteAlbum(x.album.id)">Suppression de l'album</button>
+		</div>
+
+		<div class = "photos" ng-repeat="p in photos" ng-hide="modeAlbum">
+			<img  src="{{p.url}}"/>
+			<div class="commentaires" ng-repeat="c in commentaires" ng-show="user">
+				<h1>{{c.commentaire}}</h1>
+				<input type="text" ng-model="com"/>
+				<button id="put_Commentaire" ng-click="postCommentaire(p.id,com)">Poster le commentaire</button>
+				<button id="delete_Commentaire" ng-click="deleteCommentaire(i.id)">Supprimer ce commentaire</button>
+				<input type="text" ng-model="newCom"/>
+				<button id="update_Commentaire" ng-click="updateCommentaire(i.id,newCom)">Poster le commentaire</button>
+			</div>
+
+			<button ng-click="deletePhoto(p.id)" id="suppression_photo">Suppression de la photo</button>
+
 		</div>
 
 		<div class="formulaire" ng-show="user">

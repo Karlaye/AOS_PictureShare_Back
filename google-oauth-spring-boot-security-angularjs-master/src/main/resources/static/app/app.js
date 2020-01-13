@@ -1,7 +1,3 @@
-
-
-
-
 // Creating angular Application with module name "GoogleOAuthDemoApp"
 var app = angular.module('GoogleOAuthDemoApp', []);
 
@@ -24,6 +20,9 @@ app.controller('AppCtrl', function($http, $scope) {
     $scope.commentaires={};
     $scope.com = "Inserez votre commentaire";
 
+    $scope.modeAlbum = true;
+    $scope.photos = {};
+
 
     // method for getting user details FONCTIONNE
         var getUser = function() {
@@ -45,7 +44,7 @@ app.controller('AppCtrl', function($http, $scope) {
             });
         };
 
-        $scope.getUserName = = function(id) { // appel avec un parametre dans l'url (/album/+parametre) a utiliser quand on veut recup un truc qui a un id ou faire un put
+        $scope.getUserName = function(id) { // appel avec un parametre dans l'url (/album/+parametre) a utiliser quand on veut recup un truc qui a un id ou faire un put
             $http.post('/user/'+id).success(function(resultat){
                     console.log(resultat)
                     return resultat;
@@ -56,6 +55,19 @@ app.controller('AppCtrl', function($http, $scope) {
 
         //method for getting all albums
         //FONCTIONNE
+
+        $scope.changemode = function(listPhotos){
+            $scope.modeAlbum = !$scope.modeAlbum;
+            if($scope.modeAlbum == false){
+                $scope.photos = listPhotos;
+                console.log(listPhotos);
+
+            } else{
+                $scope.getAllAlbum();
+                document.location.reload(true);
+            }
+
+        }
         $scope.getAllAlbum = function() {
             $http.get('/album/all').success(function(resultat) {
                 $scope.albums = resultat;
@@ -159,11 +171,13 @@ app.controller('AppCtrl', function($http, $scope) {
             $http.get('/commentaire/'+idPhoto).success(function(resultat) {
                 $scope.commentaires = resultat;
                     console.log('commentaires : ', resultat);
+                    return resultat;
                 }).error(function(error) {
                     console.log("fail get all coms");
+                    console.log(idPhoto);
                 });
             };
-            $scope.getAllCom(1);
+        $scope.getAllCom();
 
 
         //FONCTIONNE
@@ -201,7 +215,7 @@ app.controller('AppCtrl', function($http, $scope) {
                 console.log("fail update com");
             })
         }
-        $scope.updateCommentaire(8, "update du commentaire 8");
+        //$scope.updateCommentaire(8, "update du commentaire 8");
 
 
         //method for get all the followers
@@ -213,7 +227,7 @@ app.controller('AppCtrl', function($http, $scope) {
                 console.log("fail get followers");
             });
         };
-        $scope.getFollowers(1);
+        //$scope.getFollowers(1);
 
         //method for getting all follows
         //FONCTIONNE
