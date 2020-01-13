@@ -25,6 +25,7 @@
 }
 </style>
 <body ng-app="GoogleOAuthDemoApp" ng-controller="AppCtrl" ng-cloak>
+
 <div class="container" style="margin-top: 50px;">
 	<!-- Login panel -->
 	<div class=" col-md-4 col-md-offset-4">
@@ -40,6 +41,7 @@
 
 		<!-- Home panel. It will visible after successfull login -->
 		<div class="panel panel-default" ng-show="user">
+
 			<div class="panel-heading">
 				<img class="p-img" alt=""
 					 ng-src="{{user.userAuthentication.details.picture}}">
@@ -62,15 +64,50 @@
 
 		<div ng-repeat="x in albums" ng-show="user">
 			<h1 ng-click="test()">{{x.album.name}}</h1> <!-- exemple directive click pour avoir une fonciton a click ng-repeat pour boucler sur l'element x (nimporte quoi qui soit de dans) dans albums ( la variable du $scope)-->
-			<div class = "photos" ng-repeat="p in x.photos">
+			<div class = "photos" ng-repeat="p in x.photos" ng-show="user">
 				<img  src="{{p.url}}"/>
+				<div class="commentaires" ng-repeat="c in commentaire" ng-show="user">
+					<h1>{{c.commentaire}}</>
+					<input type="text" ng-model="com"/>
+					<button id="put_Commentaire" ng-click="postCommentaire(p.id,com)">Poster le commentaire</button>
+					<button id="delete_Commentaire" ng-click="deleteCommentaire(i.id)">Supprimer ce commentaire</button>
+					<input type="text" ng-model="newCom"/>
+					<button id="update_Commentaire" ng-click="updateCommentaire(i.id,newCom)">Poster le commentaire</button>
+				</div>
+
 				<button ng-click="deletePhoto(p.id)" id="suppression_photo">Suppression de la photo</button>
+
 			</div>
 
 
 			<button id="ajout_photo" ng-click="putPhotoAlbum(x.album.id)">Ajout d'une photo en base</button>
 			<button id="delete_album" ng-click="deleteAlbum(x.album.id)">Suppression de l'album</button>
 		</div>
+
+		<div class="formulaire" ng-show="user">
+			<form>
+				<input type="text" ng-model="name"/>
+				<input type="text" ng-model="image"/>
+				<button id="create_album" ng-click="createAlbum(name,image)">Création d'un album</button>
+
+				<input type="text" ng-model="titre"/>
+				<input type="text" ng-model="idAlbum"/>
+				<input type="text" ng-model="legende"/>
+				<input type="text" ng-model="url"/>
+				<button id="put_photo" ng-click="putPhotoAlbum(titre, idAlbum, legende, url)">Création d'une photo</button>
+
+			</form>
+		</div>
+
+		<!--<h1 ng-show="user">Nb Followers: {{}}</h1>-->
+		<div class="followers" ng-repeat="f in follow" ng-show="user">
+			<h1>{{getf.idFollower}}</h1>
+		</div >
+
+		<h1 ng-show="user">Nb Follows: {{}}</h1>
+		<div class="follows" ng-repeat="fw in follow" ng-show="user">
+			<h1>{{fw.id.user.name}}</h1>
+		</div>-->
 	</div>
 </div>
 
