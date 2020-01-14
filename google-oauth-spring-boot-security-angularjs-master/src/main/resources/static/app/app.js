@@ -49,8 +49,8 @@ app.controller('AppCtrl', function($http, $scope) {
         };
 
         $scope.getUserName = function(id) { // appel avec un parametre dans l'url (/album/+parametre) a utiliser quand on veut recup un truc qui a un id ou faire un put
-            $http.post('/user/'+id).success(function(resultat){
-                    console.log(resultat)
+            $http.get('/user/'+id).success(function(resultat){
+                    console.log("test: ", resultat)
                     return resultat;
                 }).error(function(error){
                     console.log("fail get by id");
@@ -235,12 +235,15 @@ app.controller('AppCtrl', function($http, $scope) {
         $scope.getFollowers = function(idUser) { // pour faire un appel simple sans arguement ni objet dans la requete
             $http.get('/follow/me').success(function(resultat) {
                 console.log('Followers : ', resultat);
-                for(i=0; i<=resultat.length; i++){
-                id = resultat[i].idFollower;
-                console.log("i: ", id);
-                $scope.followers = $scope.getUserName(id);
-                }
-                console.log($scope.followers)
+                resultat.forEach(function(item, index, array) {
+                var a = $scope.getUserName(item.idFollower);
+                item.name = a;
+                console.log("test dans boucle: ",a);
+                $scope.followers = item.name;
+                });
+
+                console.log("item: ",item);
+                console.log("test à la fin de la boucle: ",$scope.followers)
                 return $scope.followers;
              }).error(function(error) {
                 console.log("fail get followers");
@@ -254,12 +257,13 @@ app.controller('AppCtrl', function($http, $scope) {
         $scope.getAllFollows = function() { // pour faire un appel simple sans arguement ni objet dans la requete
             $http.get('/follow').success(function(resultat) {
                 console.log('Follows : ', resultat);
-                for(i=0; i<=resultat.length; i++){
-                    id = resultat[i].idUser;
-                    console.log("id follow: ", id);
-                    $scope.follows = $scope.getUserName(id);
-                }
-                console.log($scope.follows);
+                resultat.forEach(function(item, index, array) {
+                    var a = $scope.getUserName(item.idUser);
+                    item.name = a;
+                    console.log("test dans boucle: ",item.name);
+                });
+                $scope.follows = resultat;
+                console.log("test: ",$scope.follows)
                 return $scope.follows;
             }).error(function(error) {
                 console.log("fail get follows");
