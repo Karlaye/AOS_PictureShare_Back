@@ -26,7 +26,7 @@ app.controller('AppCtrl', function($http, $scope) {
     $scope.followers = {};
     $scope.follows = {};
 
-
+    var id;
 
     // method for getting user details FONCTIONNE
         var getUser = function() {
@@ -54,6 +54,7 @@ app.controller('AppCtrl', function($http, $scope) {
                     return resultat;
                 }).error(function(error){
                     console.log("fail get by id");
+                    console.log(id);
                                          })
                                      }
 
@@ -93,7 +94,7 @@ app.controller('AppCtrl', function($http, $scope) {
         }
         //$scope.getAlbumById(1);
 
-/*        //method for getting all my albums
+        //method for getting all my albums
         //DEMANDER A MAXIME
                 $scope.getAllAlbumForMe = function() { // pour faire un appel simple sans arguement ni objet dans la requete
                     $http.get('/album/all/me').success(function(resultat) {
@@ -112,7 +113,7 @@ app.controller('AppCtrl', function($http, $scope) {
                console.log("fail get all albums");
             });
         };
-*/
+
         //method for delete an album
         //FONCTIONNE
         $scope.deleteAlbum = function(id){
@@ -183,7 +184,6 @@ app.controller('AppCtrl', function($http, $scope) {
                     document.location.reload(true);
                 }).error(function(error) {
                     console.log("fail get all coms");
-                    console.log("idPhoto: ", idPhoto);
                 });
             };
         $scope.getAllCom();
@@ -232,31 +232,37 @@ app.controller('AppCtrl', function($http, $scope) {
 
         //method for get all the followers
        //FONCTIONNE
-        /*$scope.getFollowers = function(idUser) { // pour faire un appel simple sans arguement ni objet dans la requete
+        $scope.getFollowers = function(idUser) { // pour faire un appel simple sans arguement ni objet dans la requete
             $http.get('/follow/me').success(function(resultat) {
                 console.log('Followers : ', resultat);
-                for (i=0; i<=resultat.length; i++){
-                    $scope.followers += $scope.getUserName(resultat[i].idFollower);
+                for(i=0; i<=resultat.length; i++){
+                id = resultat[i].idFollower;
+                console.log("i: ", id);
+                $scope.followers = $scope.getUserName(id);
                 }
+                console.log($scope.followers)
                 return $scope.followers;
              }).error(function(error) {
                 console.log("fail get followers");
+
             });
         };
-        $scope.getFollowers($scope.user);*/
+        $scope.getFollowers($scope.user);
 
         //method for getting all follows
         //FONCTIONNE
         $scope.getAllFollows = function() { // pour faire un appel simple sans arguement ni objet dans la requete
             $http.get('/follow').success(function(resultat) {
                 console.log('Follows : ', resultat);
-                for(i = 0; i<=resultat.length; i++){
-                    $scope.follows[i] =  $scope.getUserName(resultat[i].idUser);
+                for(i=0; i<=resultat.length; i++){
+                    id = resultat[i].idUser;
+                    console.log("id follow: ", id);
+                    $scope.follows = $scope.getUserName(id);
                 }
+                console.log($scope.follows);
                 return $scope.follows;
-
             }).error(function(error) {
-                console.log("fail get followss");
+                console.log("fail get follows");
             });
         };
         $scope.getAllFollows();

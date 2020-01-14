@@ -105,12 +105,12 @@
 		<div ng-show="user">
 			<!--<h1 ng-show="user">Nb Followers: {{}}</h1>-->
 			<div class="followers" ng-repeat="f in followers" ng-show="user">
-				<h1>{{f.idFollower}}</h1>
+				<h1>Follower: {{f.name}}</h1>
 			</div >
 
 			<!--<h1 ng-show="user">Nb Follows: {{}}</h1>-->
 			<div class="follows" ng-repeat="fw in follows" ng-show="user">
-				<h1>Follow: {{fw.idUser}}</h1>
+				<h1>Follow: {{fw.name}}</h1>
 			</div>
 
 		</div>
