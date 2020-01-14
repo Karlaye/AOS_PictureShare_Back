@@ -72,14 +72,15 @@
 		</div>
 
 		<div class = "photos" ng-repeat="p in photos" ng-hide="modeAlbum">
-			<img  src="{{p.url}}"/>
-			<div class="commentaires" ng-repeat="c in commentaires" ng-show="user">
+			<img  src="{{p.url}}" ng-click="getAllCom(p.id)"/>
+			<button ng-click="follow(p.idUser)">Follow</button>
+			<div class="commentaires" ng-repeat="c in commentaires" ng-hide="modeAlbum">
 				<h1>{{c.commentaire}}</h1>
 				<input type="text" ng-model="com"/>
 				<button id="put_Commentaire" ng-click="postCommentaire(p.id,com)">Poster le commentaire</button>
-				<button id="delete_Commentaire" ng-click="deleteCommentaire(i.id)">Supprimer ce commentaire</button>
+				<button id="delete_Commentaire" ng-click="deleteCommentaire(c.id)">Supprimer ce commentaire</button>
 				<input type="text" ng-model="newCom"/>
-				<button id="update_Commentaire" ng-click="updateCommentaire(i.id,newCom)">Poster le commentaire</button>
+				<button id="update_Commentaire" ng-click="updateCommentaire(c.id,newCom)">Poster le commentaire</button>
 			</div>
 
 			<button ng-click="deletePhoto(p.id)" id="suppression_photo">Suppression de la photo</button>
@@ -101,15 +102,19 @@
 			</form>
 		</div>
 
-		<!--<h1 ng-show="user">Nb Followers: {{}}</h1>-->
-		<div class="followers" ng-repeat="f in follow" ng-show="user">
-			<h1>{{getf.idFollower}}</h1>
-		</div >
+		<div ng-show="user">
+			<!--<h1 ng-show="user">Nb Followers: {{}}</h1>-->
+			<div class="followers" ng-repeat="f in followers" ng-show="user">
+				<h1>{{f.idFollower}}</h1>
+			</div >
 
-		<h1 ng-show="user">Nb Follows: {{}}</h1>
-		<div class="follows" ng-repeat="fw in follow" ng-show="user">
-			<h1>{{fw.id.user.name}}</h1>
-		</div>-->
+			<!--<h1 ng-show="user">Nb Follows: {{}}</h1>-->
+			<div class="follows" ng-repeat="fw in follows" ng-show="user">
+				<h1>Follow: {{fw.idUser}}</h1>
+			</div>
+
+		</div>
+
 	</div>
 </div>
 

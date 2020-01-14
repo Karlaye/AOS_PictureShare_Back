@@ -23,6 +23,10 @@ app.controller('AppCtrl', function($http, $scope) {
     $scope.modeAlbum = true;
     $scope.photos = {};
 
+    $scope.followers = {};
+    $scope.follows = {};
+
+
 
     // method for getting user details FONCTIONNE
         var getUser = function() {
@@ -61,7 +65,7 @@ app.controller('AppCtrl', function($http, $scope) {
             if($scope.modeAlbum == false){
                 $scope.photos = listPhotos;
                 console.log(listPhotos);
-
+                $scope.getAllCom(listPhotos);
             } else{
                 $scope.getAllAlbum();
                 document.location.reload(true);
@@ -115,6 +119,7 @@ app.controller('AppCtrl', function($http, $scope) {
             $http.delete('/album/'+id).success(function(){
                 console.log("deleteDone")
                 $scope.getAllAlbum();
+                document.location.reload(true);
             }).error(function(error){
                 console.log("fail delete")
             })
@@ -130,6 +135,7 @@ app.controller('AppCtrl', function($http, $scope) {
             $http.post('/album/new', album).success(function(){
                 console.log("postAlbum done")
                 $scope.getAllAlbum()
+                document.location.reload(true);
             }).error(function(error){
                 console.log("fail post album");
             })
@@ -147,6 +153,7 @@ app.controller('AppCtrl', function($http, $scope) {
             photo.url = url;
             $http.put('/album/'+idAlbum , photo).success(function(){
                 console.log("put done")
+                document.location.reload(true);
                 $scope.getAllAlbum();
             }).error(function(error){
                 console.log("fail put photo");
@@ -159,6 +166,7 @@ app.controller('AppCtrl', function($http, $scope) {
             $http.delete('/album/picture/'+id).success(function(){
                 console.log("deleteDone photo")
                 $scope.getAllAlbum()
+                document.location.reload(true);
             }).error(function(error){
                 console.log("fail delete photo");
 
@@ -172,9 +180,10 @@ app.controller('AppCtrl', function($http, $scope) {
                 $scope.commentaires = resultat;
                     console.log('commentaires : ', resultat);
                     return resultat;
+                    document.location.reload(true);
                 }).error(function(error) {
                     console.log("fail get all coms");
-                    console.log(idPhoto);
+                    console.log("idPhoto: ", idPhoto);
                 });
             };
         $scope.getAllCom();
@@ -185,7 +194,8 @@ app.controller('AppCtrl', function($http, $scope) {
         $scope.postCommentaire = function(idPhoto, com){
             $http.post('/commentaire/'+idPhoto , com).success(function(){
                 console.log("put com done")
-                $scope.getAllAlbum();
+                $scope.getAllAlbum()
+                document.location.reload(true);
             }).error(function(error){
                 console.log("fail put com");
             })
@@ -198,6 +208,7 @@ app.controller('AppCtrl', function($http, $scope) {
         $scope.deleteCommentaire = function(id){
             $http.delete('/commentaire/' + id).success(function(){
                 console.log("deleteDone commentaire")
+                document.location.reload(true);
             }).error(function(error){
                 console.log(id)
                 console.log("fail delete com");
@@ -211,6 +222,7 @@ app.controller('AppCtrl', function($http, $scope) {
         $scope.updateCommentaire = function(idCom, newCom){
             $http.put('/commentaire/' + idCom, newCom).success(function(){
                 console.log("updateDone commentaire")
+                document.location.reload(true);
             }).error(function(error){
                 console.log("fail update com");
             })
@@ -220,20 +232,29 @@ app.controller('AppCtrl', function($http, $scope) {
 
         //method for get all the followers
        //FONCTIONNE
-        $scope.getFollowers = function(idUser) { // pour faire un appel simple sans arguement ni objet dans la requete
+        /*$scope.getFollowers = function(idUser) { // pour faire un appel simple sans arguement ni objet dans la requete
             $http.get('/follow/me').success(function(resultat) {
                 console.log('Followers : ', resultat);
-            }).error(function(error) {
+                for (i=0; i<=resultat.length; i++){
+                    $scope.followers += $scope.getUserName(resultat[i].idFollower);
+                }
+                return $scope.followers;
+             }).error(function(error) {
                 console.log("fail get followers");
             });
         };
-        //$scope.getFollowers(1);
+        $scope.getFollowers($scope.user);*/
 
         //method for getting all follows
         //FONCTIONNE
         $scope.getAllFollows = function() { // pour faire un appel simple sans arguement ni objet dans la requete
             $http.get('/follow').success(function(resultat) {
                 console.log('Follows : ', resultat);
+                for(i = 0; i<=resultat.length; i++){
+                    $scope.follows[i] =  $scope.getUserName(resultat[i].idUser);
+                }
+                return $scope.follows;
+
             }).error(function(error) {
                 console.log("fail get followss");
             });
