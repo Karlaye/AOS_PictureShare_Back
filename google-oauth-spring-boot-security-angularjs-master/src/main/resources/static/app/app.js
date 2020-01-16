@@ -23,12 +23,12 @@ app.controller('AppCtrl', function($http, $scope) {
     $scope.modeAlbum = true;
     $scope.photos = {};
 
-    $scope.followers = {};
-    $scope.follows = {};
+    $scope.followers = [];
+    $scope.follows = [];
 
     var id;
 
-    // method for getting user details FONCTIONNE
+    // method for getting user details
         var getUser = function() {
             $http.get('/user').success(function(user) {
                 $scope.user = user;
@@ -39,7 +39,7 @@ app.controller('AppCtrl', function($http, $scope) {
         };
         getUser();
 
-        // method for logout FONCTIONNE
+        // method for logout
         $scope.logout = function() {
             $http.post('/logout').success(function(res) {
                 $scope.user = null;
@@ -54,18 +54,15 @@ app.controller('AppCtrl', function($http, $scope) {
                     return resultat;
                 }).error(function(error){
                     console.log("fail get by id");
-                    console.log(id);
-                                         })
-                                     }
+            })
+        }
 
-        //method for getting all albums
-        //FONCTIONNE
 
+        //Permet d'afficher que les photos ou que les albums
         $scope.changemode = function(listPhotos){
             $scope.modeAlbum = !$scope.modeAlbum;
             if($scope.modeAlbum == false){
                 $scope.photos = listPhotos;
-                console.log(listPhotos);
                 $scope.getAllCom(listPhotos);
             } else{
                 $scope.getAllAlbum();
@@ -73,6 +70,8 @@ app.controller('AppCtrl', function($http, $scope) {
             }
 
         }
+
+        //method for getting all albums
         $scope.getAllAlbum = function() {
             $http.get('/album/all').success(function(resultat) {
                 $scope.albums = resultat;
@@ -84,7 +83,6 @@ app.controller('AppCtrl', function($http, $scope) {
         $scope.getAllAlbum();
 
         //method for getting album by his id
-        //FONCTIONNE
         $scope.getAlbumById = function(id) { // appel avec un parametre dans l'url (/album/+parametre) a utiliser quand on veut recup un truc qui a un id ou faire un put
             $http.post('/album/'+id).success(function(resultat){
                 console.log(resultat)
@@ -115,7 +113,6 @@ app.controller('AppCtrl', function($http, $scope) {
         };
 
         //method for delete an album
-        //FONCTIONNE
         $scope.deleteAlbum = function(id){
             $http.delete('/album/'+id).success(function(){
                 console.log("deleteDone")
@@ -234,16 +231,13 @@ app.controller('AppCtrl', function($http, $scope) {
        //FONCTIONNE
         $scope.getFollowers = function(idUser) { // pour faire un appel simple sans arguement ni objet dans la requete
             $http.get('/follow/me').success(function(resultat) {
-                console.log('Followers : ', resultat);
                 resultat.forEach(function(item, index, array) {
-                var a = $scope.getUserName(item.idFollower);
-                item.name = a;
-                console.log("test dans boucle: ",a);
-                $scope.followers = item.name;
-                });
-
-                console.log("item: ",item);
-                console.log("test à la fin de la boucle: ",$scope.followers)
+                $http.get('/user/'+item.idFollower).success(function(resultat){
+                    $scope.followers.push(resultat);
+                }).error(function(error){
+                    console.log("fail get by id");
+                })
+            });
                 return $scope.followers;
              }).error(function(error) {
                 console.log("fail get followers");
@@ -256,14 +250,13 @@ app.controller('AppCtrl', function($http, $scope) {
         //FONCTIONNE
         $scope.getAllFollows = function() { // pour faire un appel simple sans arguement ni objet dans la requete
             $http.get('/follow').success(function(resultat) {
-                console.log('Follows : ', resultat);
                 resultat.forEach(function(item, index, array) {
-                    var a = $scope.getUserName(item.idUser);
-                    item.name = a;
-                    console.log("test dans boucle: ",item.name);
-                });
-                $scope.follows = resultat;
-                console.log("test: ",$scope.follows)
+                $http.get('/user/'+item.idUser).success(function(resultat){
+                    $scope.follows.push(resultat);
+                }).error(function(error){
+                    console.log("fail get by id");
+                })
+            });
                 return $scope.follows;
             }).error(function(error) {
                 console.log("fail get follows");
