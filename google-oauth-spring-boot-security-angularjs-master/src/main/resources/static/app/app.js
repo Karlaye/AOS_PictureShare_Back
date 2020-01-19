@@ -28,6 +28,7 @@ app.controller('AppCtrl', function($http, $scope) {
     $scope.followers = [];
     $scope.follows = [];
     $scope.nameAFollow = "";
+    $scope.barre = "";
 
     $scope.nom_tampon = "";
     $scope.albumeARegler ="";
@@ -62,7 +63,6 @@ app.controller('AppCtrl', function($http, $scope) {
     };
     getUserId();
 
-
     // method for logout FONCTIONNE
     $scope.logout = function () {
         $http.post('/logout').success(function (res) {
@@ -74,7 +74,6 @@ app.controller('AppCtrl', function($http, $scope) {
 
     $scope.getUserName = function (id) { // appel avec un parametre dans l'url (/album/+parametre) a utiliser quand on veut recup un truc qui a un id ou faire un put
         $http.get('/user/' + id).success(function (resultat) {
-            console.log("test: ", resultat);
             $scope.nom_tampon = resultat.name;
             return resultat;
         }).error(function (error) {
@@ -227,8 +226,14 @@ app.controller('AppCtrl', function($http, $scope) {
     $scope.getAllCom = function (idPhoto) {
         $http.get('/commentaire/' + idPhoto).success(function (resultat) {
             $scope.commentaires = resultat;
-            console.log('commentaires : ', resultat);
-            return resultat;
+            resultat.forEach(function(item, index, array) {
+            $http.get('/user/'+item.idUser).success(function(resultat){
+                $scope.commentaires.push(resultat);
+            }).error(function(error){
+                console.log("fail get by id");
+            })
+        });
+            return $scope.commentaires;
             document.location.reload(true);
         }).error(function (error) {
             console.log("fail get all coms");
@@ -242,7 +247,7 @@ app.controller('AppCtrl', function($http, $scope) {
     $scope.postCommentaire = function (idPhoto, com) {
         $http.post('/commentaire/' + idPhoto, com).success(function () {
             console.log("put com done")
-            $scope.getAllAlbum()
+            $scope.getAllCom()
             document.location.reload(true);
         }).error(function (error) {
             console.log("fail put com");
@@ -356,7 +361,7 @@ app.controller('AppCtrl', function($http, $scope) {
     //method for get nb of followers
     $scope.getNbFollowers = function () { // pour faire un appel simple sans arguement ni objet dans la requete
         $http.get('/follow/me/count').success(function (resultat) {
-            console.log('Nb Followers : ', resultat);
+
         }).error(function (error) {
             console.log("fail get nb followers");
         });
@@ -368,7 +373,7 @@ app.controller('AppCtrl', function($http, $scope) {
 
     $scope.getNbFollows = function () { // pour faire un appel simple sans arguement ni objet dans la requete
         $http.get('/follow/count').success(function (resultat) {
-            console.log('Nb Follows : ', resultat);
+
         }).error(function (error) {
             console.log("fail get nb follows");
         });
@@ -383,6 +388,16 @@ app.controller('AppCtrl', function($http, $scope) {
         }).error(function (error) {
             console.log("fail update com");
         })
+    }
+
+    $scope.rechercher = function(){
+        $http.get('/user/' + $scope.barre).success(function (user) {
+            console.log("user infos:  ", user);
+            $scope.getAllAlbumForUser(id);
+        }).error(function (error) {
+            console.log("barre: ", barre)
+            $scope.resource = error;
+        });
     }
 
 
