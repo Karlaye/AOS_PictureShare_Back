@@ -19,6 +19,8 @@ public interface DroitAlbumRepository extends JpaRepository<DroitAlbum, Long> {
 
     List<DroitAlbum> findAllByIdAlbum(Long idAlbum);
 
+    DroitAlbum findFirstByIdUserAndIdAlbum(Long idUser, Long idAlbum);
+
     DroitAlbum findById(Long id);
 
     void delete(DroitAlbum a);

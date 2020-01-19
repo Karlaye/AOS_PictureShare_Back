@@ -5,12 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.techforumist.google.oauth.DTO.AlbumDTO;
-import org.techforumist.google.oauth.model.Album;
-import org.techforumist.google.oauth.model.Photo;
-import org.techforumist.google.oauth.model.User;
-import org.techforumist.google.oauth.repository.AlbumRepository;
-import org.techforumist.google.oauth.repository.PhotoRepository;
-import org.techforumist.google.oauth.repository.UserRepository;
+import org.techforumist.google.oauth.model.*;
+import org.techforumist.google.oauth.repository.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -28,7 +24,14 @@ public class AlbumeRestController {
     @Autowired
     private AlbumRepository albumRepository;
 
-    @GetMapping(value = "/album/all")
+    @Autowired
+    private FollowRepository followRepository;
+
+    @Autowired
+    private DroitAlbumRepository droitAlbumRepository;
+
+
+    /*@GetMapping(value = "/album/all")
     @PreAuthorize("hasRole('USER')")
     public List<AlbumDTO> getAllAlbum(Principal principal) {
         AlbumDTO albumDTO = new AlbumDTO();
@@ -42,7 +45,7 @@ public class AlbumeRestController {
             albumDTOList.add(a);
         }
         return albumDTOList;
-    }
+    }*/
     @PostMapping(value = "/album/{id}")
     @PreAuthorize("hasRole('USER')")
     public AlbumDTO getAlbumById(Principal principal,@PathVariable Long id){
@@ -55,11 +58,13 @@ public class AlbumeRestController {
     @PutMapping(value = "/album/{id}")
     @PreAuthorize("hasRole('USER')")
     public void putPhotoById(Principal principal, @PathVariable Long id, @RequestBody Photo photo){
-        Photo photo1 = new Photo();
-        photo1 = photo;
-        photo1.setIdUser(userRepository.findByName(principal.getName()).getId());
-        photoRepository.save(photo1);
-        System.out.println(photo1);
+        if(albumRepository.findOne(id).getIdUser().equals(userRepository.findByName(principal.getName()).getId())) {
+            Photo photo1 = new Photo();
+            photo1 = photo;
+            photo1.setIdUser(userRepository.findByName(principal.getName()).getId());
+            photoRepository.save(photo1);
+            System.out.println(photo1);
+        }
     }
     @DeleteMapping(value ="/album/{id}")
     @PreAuthorize("hasRole('USER')")
@@ -81,7 +86,16 @@ public class AlbumeRestController {
         album.setIdUser(userRepository.findByName(principal.getName()).getId());
         albumRepository.save(album1);
     }
-    @GetMapping(value="/album/all/me")
+    @PutMapping(value ="/album/update")
+    @PreAuthorize("hasRole('USER')")
+    public void updateAlbum(Principal principal, @RequestBody Album album){
+            Album album1 = album;
+            albumRepository.save(album1);
+
+    }
+
+
+    @GetMapping(value="/album/all")
     @PreAuthorize("hasRole('USER')")
     public List<AlbumDTO> getAlbumMe(Principal principal){
         AlbumDTO albumDTO = new AlbumDTO();
@@ -100,23 +114,44 @@ public class AlbumeRestController {
     @PostMapping(value="/album/all/user/{id}")
     @PreAuthorize("hasRole('USER')")
     public List<AlbumDTO> getAlbumForUser(Principal principal,@PathVariable Long id){
+        boolean follower = false;
         AlbumDTO albumDTO = new AlbumDTO();
         List<AlbumDTO> albumDTOList = new ArrayList<>();
         List<Album> albums = albumRepository.findAllByIdUser(id);
         AlbumDTO a = new AlbumDTO();
-        for(Album album : albums){
-            a = new AlbumDTO();
-            a.setAlbum(album);
-            a.setPhotos(photoRepository.findAllByIdAlbum(album.getId()));
-            albumDTOList.add(a);
+
+        if(followRepository.findFirstByIdUserAndIdFollower(id,userRepository.findByName(principal.getName()).getId()) != null ){
+            follower = true;
         }
+        List<DroitAlbum> listDroitAlbums = new ArrayList<>();
+        for(Album album : albums){
+                listDroitAlbums = droitAlbumRepository.findAllByIdAlbum(album.getId());
+                if(album.getPublique()) {
+                    a = new AlbumDTO();
+                    a.setAlbum(album);
+                    a.setPhotos(photoRepository.findAllByIdAlbum(album.getId()));
+                    albumDTOList.add(a);
+                }if(album.getFollower() && follower ){
+                    a = new AlbumDTO();
+                    a.setAlbum(album);
+                    a.setPhotos(photoRepository.findAllByIdAlbum(album.getId()));
+                    albumDTOList.add(a);
+
+                }if(droitAlbumRepository.findFirstByIdUserAndIdAlbum(userRepository.findByName(principal.getName()).getId(), album.getId()) != null){
+                a = new AlbumDTO();
+                a.setAlbum(album);
+                a.setPhotos(photoRepository.findAllByIdAlbum(album.getId()));
+                albumDTOList.add(a);
+            }
+
+            }
         return albumDTOList;
     }
 
     @DeleteMapping(value="/album/picture/{id}")
     @PreAuthorize("hasRole('USER')")
     public void deletePhoto(Principal principal, @PathVariable Long id){
-        if(principal.getName().equals(userRepository.findOne(albumRepository.findOne(id).getIdUser()).getName())){
+        if(principal.getName().equals(userRepository.findOne(photoRepository.findOne(id).getIdUser()).getName())){
             photoRepository.delete(id);
         }
     }

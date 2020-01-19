@@ -17,6 +17,10 @@ import org.techforumist.google.oauth.repository.UserRepository;
 public class UserRestController {
 	@Autowired
 	private UserRepository userRepository;
+	@GetMapping("/error")
+	public String erreur(Principal principal){
+		return("/index.html");
+	}
 
 	@RequestMapping("/user")
 	public Principal sayHello(Principal principal) {
@@ -41,4 +45,11 @@ public class UserRestController {
 	public User getUserInfo(Principal principal,@PathVariable Long id){
 		return userRepository.findOne(id);
 	}
+	@GetMapping("/user/id")
+	@PreAuthorize("hasRole('USER')")
+	public long getUserId(Principal principal){
+		return userRepository.findByName(principal.getName()).getId();
+	}
+
+
 }

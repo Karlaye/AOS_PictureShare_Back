@@ -27,6 +27,8 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     Follow save(Follow c);
 
+    Follow findFirstByIdUserAndIdFollower(long idUser,long idFollower);
+
 
 
 }

@@ -53,7 +53,15 @@ public class FollowRestController {
     @DeleteMapping(value ="/follow/{id}")
     @PreAuthorize("hasRole('USER')")
     public void deleteCommentaire(Principal principal, @PathVariable Long id) {
-        followRepository.delete(id);
+
+        followRepository.delete(followRepository.findFirstByIdUserAndIdFollower(id, userRepository.findByName(principal.getName()).getId()).getId());
+    }
+
+    @DeleteMapping(value ="/follower/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public void deleteFollower(Principal principal, @PathVariable Long id) {
+
+        followRepository.delete(followRepository.findFirstByIdUserAndIdFollower(userRepository.findByName(principal.getName()).getId(),id).getId());
     }
 
     @GetMapping(value = "/follow/me/count")
@@ -68,5 +76,15 @@ public class FollowRestController {
         return followRepository.findAllByIdFollower(userRepository.findByName(principal.getName()).getId()).size();
     }
 
+    @PostMapping(value = "/follow")
+    @PreAuthorize("hasRole('USER')")
+    public void FollowByName(Principal principal, @RequestBody String name){
+        Follow follow = new Follow();
+        follow.setIdUser(userRepository.findByName(name).getId());
+        follow.setIdFollower(userRepository.findByName(principal.getName()).getId());
+        if(followRepository.findFirstByIdUserAndIdFollower(follow.getIdUser(), follow.getIdFollower()) == null ) {
+            followRepository.save(follow);
+        }
 
+    }
 }
