@@ -39,6 +39,8 @@ app.controller('AppCtrl', function($http, $scope) {
 
     $scope.current_user_id = -1;
 
+    $scope.id_pseudo ="";
+
     var id;
 
     // method for getting user details FONCTIONNE
@@ -62,6 +64,16 @@ app.controller('AppCtrl', function($http, $scope) {
         });
     };
     getUserId();
+
+    $scope.getUserIdByPseudo = function(pseudo){
+        $http.post('/user/pseudo',pseudo).success(function (res) {
+            $scope.id_pseudo = res;
+            console.log("id by pseudo : "+res);
+        }).error(function (error) {
+            $scope.resource = error;
+        });
+    }
+    $scope.getUserIdByPseudo("maxime janicot");
 
     // method for logout FONCTIONNE
     $scope.logout = function () {

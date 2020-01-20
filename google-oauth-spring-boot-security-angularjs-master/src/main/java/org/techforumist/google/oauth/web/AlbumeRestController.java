@@ -66,6 +66,7 @@ public class AlbumeRestController {
             System.out.println(photo1);
         }
     }
+
     @DeleteMapping(value ="/album/{id}")
     @PreAuthorize("hasRole('USER')")
     public String deleteAlbum(Principal principal, @PathVariable Long id){
