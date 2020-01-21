@@ -58,7 +58,6 @@ app.controller('AppCtrl', function($http, $scope) {
     var getUserId = function () {
         $http.get('/user/id').success(function (res) {
            $scope.current_user_id = res;
-           console.log("id : "+res);
         }).error(function (error) {
             $scope.resource = error;
         });
@@ -68,12 +67,13 @@ app.controller('AppCtrl', function($http, $scope) {
     $scope.getUserIdByPseudo = function(pseudo){
         $http.post('/user/pseudo',pseudo).success(function (res) {
             $scope.id_pseudo = res;
-            console.log("id by pseudo : "+res);
+            console.log("id user: ", $scope.id_pseudo);
+            return $scope.id_pseudo;
         }).error(function (error) {
             $scope.resource = error;
         });
     }
-    $scope.getUserIdByPseudo("maxime janicot");
+    //$scope.getUserIdByPseudo("maxime janicot");
 
     // method for logout FONCTIONNE
     $scope.logout = function () {
@@ -118,7 +118,6 @@ app.controller('AppCtrl', function($http, $scope) {
     $scope.getAllAlbum = function () {
         $http.get('/album/all').success(function (resultat) {
             $scope.albums = resultat;
-            console.log('albums : ', resultat);
         }).error(function (error) {
             console.log("fail get all albums");
         });
@@ -149,11 +148,12 @@ app.controller('AppCtrl', function($http, $scope) {
     //method for getting all user's albums
     //DEMANDER A MAXIME
     $scope.getAllAlbumForUser = function (id) { // pour faire un appel simple sans arguement ni objet dans la requete
-        $http.post('/album/all/user/' + id).success(function (resultat) {
+        $http.get('/album/all/user/' + id).success(function (resultat) {
             $scope.albums=resultat;
             $scope.modeAlbum=true;
             console.log('albums for user : ' + id, resultat);
         }).error(function (error) {
+
             console.log("fail get all albums");
         });
     };
@@ -238,12 +238,15 @@ app.controller('AppCtrl', function($http, $scope) {
     $scope.getAllCom = function (idPhoto) {
         $http.get('/commentaire/' + idPhoto).success(function (resultat) {
             $scope.commentaires = resultat;
+            console.log($scope.commentaires);
             resultat.forEach(function(item, index, array) {
-            $http.get('/user/'+item.idUser).success(function(resultat){
-                $scope.commentaires.push(resultat);
+            $http.get('/user/'+item.idUser).success(function(resultats){
+                item.name = resultats.name;
             }).error(function(error){
                 console.log("fail get by id");
             })
+            $scope.commentaires.push = resultat;
+            console.log("final: ",$scope.commentaires);
         });
             return $scope.commentaires;
             document.location.reload(true);
@@ -403,11 +406,16 @@ app.controller('AppCtrl', function($http, $scope) {
     }
 
     $scope.rechercher = function(){
-        $http.get('/user/' + $scope.barre).success(function (user) {
-            console.log("user infos:  ", user);
-            $scope.getAllAlbumForUser(id);
+        $http.post('/user/pseudo',$scope.barre).success(function (res) {
+            $scope.id_pseudo = res;
+            $http.post('/album/all/user/' + res).success(function (resultat) {
+                $scope.albums=resultat;
+                $scope.modeAlbum=true;
+                console.log('albums for user : ' + res, resultat);
+            }).error(function (error) {
+                console.log("fail get all albums");
+            });
         }).error(function (error) {
-            console.log("barre: ", barre)
             $scope.resource = error;
         });
     }

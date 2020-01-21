@@ -42,14 +42,6 @@ public class Album {
         this.id = id;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public String getName() {
         return name;
     }
@@ -72,5 +64,13 @@ public class Album {
 
     public void setIdUser(Long idUser) {
         this.idUser = idUser;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

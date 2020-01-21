@@ -45,8 +45,8 @@
       <ul class="nav navbar-nav">
         <div class="panel panel-default" ng-show="user">
           <form name="formbarre">
-              <input type="text" name="barre" id="barre" value= "recherche..." />
-              <input type="button" onclick="rechercher() " value="start" />
+              <input type="text" name="barre" id="barre" ng_model="barre" />
+              <input type="button" ng-click="rechercher()" value="start" />
               <button id="put_photo" class="btn btn-primary" ng-click="openAlbumModal()" >Création d'un album</button>
 
           </form>
@@ -205,7 +205,7 @@
 
                 <div class="row">
 
-                    <div class="col-sm-6 col-md-4" ng-repeat="p in photos" ng-hide="modeAlbum">
+                    <div class="col-sm-6 col-md-4" ng-repeat="p in photos" ng-hide="modeAlbum" ng-click="getAllCom(p.id)">
                         <div class="thumbnail">
                         <img class="card-img-top" ng-click="openPictureModal(p)" src="{{p.url}}">
                             </a>
@@ -307,7 +307,7 @@
                 			</div>
                 		</div>
 
-                				<div class="modal fade" id="pictureModal" role="dialog">
+                				<div class="modal fade" id="pictureModal" role="dialog" >
                         			<div class="modal-dialog">
                         			<div class="modal-content">
                         			<div class="modal-header">
@@ -319,11 +319,16 @@
                         				<section class="col-sm-6" >
                         							<img class="img-responsive" src="{{current_picture.url}}">
                         				</section>
+
+										<section ng-repeat="c in commentaires">
+											<!--{{c.name}}-->
+											<h1> @{{c.name}} : {{c.commentaire}} </h1>
+										</section>
                         				<section class="col-sm-6">
                         							<form class="well">
                         								<label for="textarea">Votre Commentaire :</label>
-                        								<textarea id="textarea" class="form-control" rows="4"></textarea>
-                        								<button class="btn btn-primary" type="submit">Envoyer</button>
+                        								<textarea id="textarea" class="form-control" rows="4" ng-model="com"></textarea>
+                        								<button class="btn btn-primary" type="submit" ng-click="postCommentaire(current_picture.id,com)">Envoyer</button>
                         							</form>
                         				</section>
                         			</div>

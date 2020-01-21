@@ -15,9 +15,9 @@ security:
       preferTokenInfo: true
 spring:
     datasource:
-        url: jdbc:mysql://localhost:8889/pictureshare
+        url: jdbc:mysql://localhost:3306/pictureshare
         username: root
-        password: root
+        password:
         tomcat.connection-properties: useUnicode=true;characterEncoding=utf-8;
         datasource.sql-script-encoding: UTF-8
 
@@ -29,3 +29,5 @@ spring:
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+server:
+    port: 8081
