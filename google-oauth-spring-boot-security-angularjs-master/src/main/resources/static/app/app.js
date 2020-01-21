@@ -40,7 +40,8 @@ app.controller('AppCtrl', function($http, $scope) {
     $scope.current_user_id = -1;
 
     $scope.id_pseudo ="";
-
+    $scope.droitsAlbum = {};
+    $scope.droitAAjouter="";
     var id;
 
     // method for getting user details FONCTIONNE
@@ -148,7 +149,7 @@ app.controller('AppCtrl', function($http, $scope) {
     //method for getting all user's albums
     //DEMANDER A MAXIME
     $scope.getAllAlbumForUser = function (id) { // pour faire un appel simple sans arguement ni objet dans la requete
-        $http.get('/album/all/user/' + id).success(function (resultat) {
+        $http.post('/album/all/user/' + id).success(function (resultat) {
             $scope.albums=resultat;
             $scope.modeAlbum=true;
             console.log('albums for user : ' + id, resultat);
@@ -260,10 +261,11 @@ app.controller('AppCtrl', function($http, $scope) {
     //FONCTIONNE
     //methode for post a new comment
     $scope.postCommentaire = function (idPhoto, com) {
+        console.log(idPhoto+"id photo");
+        console.log(com+"com");
         $http.post('/commentaire/' + idPhoto, com).success(function () {
             console.log("put com done")
-            $scope.getAllCom()
-            document.location.reload(true);
+            $scope.getAllCom();
         }).error(function (error) {
             console.log("fail put com");
         })
@@ -419,12 +421,29 @@ app.controller('AppCtrl', function($http, $scope) {
             $scope.resource = error;
         });
     }
+    $scope.getDroitAlbum = function(id){
+    $http.get('/album/droit/'+id).success(function (res) {
+        console.log("get Droit");
+        $scope.droitsAlbum = res;
+    }).error(function (error) {
+        console.log("fail droit");
+    })
+    }
 
+    $scope.addDroits = function(){
+        $http.post('/album/droit/'+$scope.albumeARegler.album.id,$scope.droitAAjouter).success(function () {
+            console.log("add Droit");
+            getDroitAlbum(id)
+        }).error(function (error) {
+            console.log("fail add droit");
+        })
+    }
 
     //modal fonctions
     $scope.openReglageModal = function (albumARegler) {
         $('#ReglageModal').modal('show');
         $scope.albumeARegler = albumARegler;
+        $scope.getDroitAlbum(albumARegler.album.id);
         console.log($scope.albumeARegler+ "album a regler");
     }
 

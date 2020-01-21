@@ -156,7 +156,37 @@ public class AlbumeRestController {
             photoRepository.delete(id);
         }
     }
+    @PostMapping(value="/album/droit/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public void ajouterdroitAlbum(Principal principal, @PathVariable Long id, @RequestBody String pseudo){
+        if(principal.getName().equals(userRepository.findOne(albumRepository.findOne(id).getIdUser()).getName())) {
+            DroitAlbum droitAlbum = new DroitAlbum();
+            droitAlbum.setIdAlbum(id);
+            droitAlbum.setIdUser(userRepository.findByName(pseudo).getId());
+            droitAlbumRepository.save(droitAlbum);
+            }
+        }
 
+    @GetMapping(value="/album/droit/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public List<String> droitAlbum(Principal principal, @PathVariable Long id){
+        if(principal.getName().equals(userRepository.findOne(albumRepository.findOne(id).getIdUser()).getName())) {
+            List<String> ls = new ArrayList<>();
+        for( DroitAlbum d : droitAlbumRepository.findAllByIdAlbum(id)){
+            ls.add(userRepository.findOne(d.getIdUser()).getName());
+        }
+        return ls;
+        }
+        return null;
+    }
+
+    @DeleteMapping(value="/album/droit/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public void deleteAlbum(Principal principal, @PathVariable Long id, @RequestBody String pseudo){
+        if(principal.getName().equals(userRepository.findOne(albumRepository.findOne(id).getIdUser()).getName())) {
+        droitAlbumRepository.delete(droitAlbumRepository.findFirstByIdUserAndIdAlbum(userRepository.findByName(pseudo).getId(),id));
+        }
+    }
     @GetMapping("/test/test")
     public String feeder(){
         Album album1 = new Album();

@@ -39,7 +39,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" ng-click="changemode(null)">Picture Share</a>
+      <a class="navbar-brand" ng-click="changemodeAcueil()">Picture Share</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
@@ -246,19 +246,20 @@
         					<section class="col-sm-6">
         						<div class="form-group">
         							<label for="exampleInputEmail1">{{reglageModaleTamon.album.titre}}</label>
-        							<input type="text" ng-model="titre" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        							<input type="text" ng-model="droitAAjouter" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
         						</div>
         					</section>
         					<section class="col-sm-6">
         						<form class="well">
-        							<label for="textarea">Vos followers :</label>
+        							<label for="textarea">User ayant acces :</label>
+        							<h1 ng-repeat="x in droitsAlbum"> {{x}}</h1>
         						</form>
         					</section>
         				</div>
         			</div>
         			</div>
         			<div class="modal-footer">
-        				<button type="button" class="btn btn-default" data-dismiss="modal">Valider</button>
+        				<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="addDroits()">Valider</button>
         				<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
         			</div>
         			</div>

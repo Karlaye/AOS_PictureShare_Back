@@ -41,9 +41,6 @@ public class CommentaireRestController {
         c.setIdUser(userRepository.findByName(principal.getName()).getId());
         c.setIdPhoto(id);
         commentaireRepository.save(c);
-        Photo p = photoRepository.findOne(commentaireRepository.findById(id).getIdPhoto());
-        p.setCommentaire(p.getCommentaire()+1);
-        photoRepository.save(p);
         return c;
     }
 
