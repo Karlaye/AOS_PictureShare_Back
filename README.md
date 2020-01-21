@@ -12,10 +12,12 @@ updateAlbum : PUT /album/update body = Album album
 createAlbum : POST/album/new body = Album album
 getAlbumForUser : GET /album/all/user/{id}
 getAlbumMe : GET /album/all
+ajouterdroitAlbum : POST album/droit/{id}
+droitAlbum : GET album/droit/{id}
 
 CommentaireRestController : 
 
-get commentaire d'une photo :GET /commentaire/{id}
+get commentaire d'une photo :GET /commentaire/c
 poster un commentaire : POST /commentaire/{id} body = String commentaire
 modifier un commentaire : PUT /commmentaire/{id} body = Commentaire commentaire
 supprimer un commentaire : DELETE /commentaire/{id}
@@ -38,3 +40,5 @@ getUserId : GET /user/id
 getUserIdByPseudo : GET /user/pseudo body = String pseudo
 
 
+
+z
